@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { db } from './../firebase-config';
-import { collection,getDocs,addDoc,setDoc,doc,updateDoc } from 'firebase/firestore';
+import { collection,getDocs,getDoc,addDoc,setDoc,doc,updateDoc,deleteDoc } from 'firebase/firestore';
+
 
 const DbInterface = () => {
 
@@ -10,9 +11,12 @@ const DbInterface = () => {
     const [itemPrice,setItemPrice] = useState(0);
     const [itemAvailability,setItemAvailability] = useState(true);
 
+    const [updateItemId,setUpdateItemId] = useState("");
     const [updateItemName,setUpdateItemName] = useState("");
     const [updateItemPrice,setUpdateItemPrice] = useState(0);
     const [updateItemAvailability,setUpdateItemAvailability] = useState(true);
+
+    const [showUpdateForm,setShowUpdateForm] = useState(false);
 
     const [showAddEmptyError,setShowAddEmptyError] = useState(false);
     const [showAddExistError,setShowAddExistError] = useState(false);
@@ -36,11 +40,12 @@ const DbInterface = () => {
         if(itemName !== ''){
             let tempFoodItems = foodItems.map((val)=>val.item.toLowerCase());
             if(!tempFoodItems.includes(itemName.toLowerCase())){
-                await setDoc(doc(foodMenuCollectionRef, String(foodItems.length + 1)),{
-                    item: itemName,
-                    price: itemPrice,
-                    available: Boolean(itemAvailability)
-                });
+                // await setDoc(doc(foodMenuCollectionRef, String(foodItems.length + 1)),{
+                //     item: itemName,
+                //     price: itemPrice,
+                //     available: Boolean(itemAvailability)
+                // });
+                await addDoc(foodMenuCollectionRef,{ item: itemName,price: itemPrice,available: Boolean(itemAvailability) });
                 getMenu();
             }
             else{
@@ -61,24 +66,15 @@ const DbInterface = () => {
         
     }
 
-    const updateMenuItem = async(e)=>{
-        e.preventDefault();
+    const updateMenuItem = async(id)=>{
         if(updateItemName !== ''){
-            let tempFoodItems = foodItems.map((val)=>val.item.toLowerCase());
-            if(tempFoodItems.includes(itemName.toLowerCase())){
-                await setDoc(doc(foodMenuCollectionRef, String(foodItems.length + 1)),{
-                    item: itemName,
-                    price: itemPrice,
-                    available: Boolean(itemAvailability)
-                });
-                getMenu();
-            }
-            else{
-                setShowUpdateExistError(true);
-                setTimeout(()=>{
-                    setShowUpdateExistError(false);
-                },4000);
-            }
+            await updateDoc(doc(foodMenuCollectionRef, id),{
+                item: updateItemName,
+                price: updateItemPrice,
+                available: Boolean(updateItemAvailability)
+            });
+            getMenu();
+            setShowUpdateForm(false);
         }
         else{
             setShowUpdateEmptyError(true);
@@ -86,6 +82,20 @@ const DbInterface = () => {
                 setShowUpdateEmptyError(false);
             },4000);
         }
+    }
+
+    const prepareUpdateForm = async(id)=>{
+        const menuItemData = await getDoc(doc(foodMenuCollectionRef,id));
+        // console.log(menuItemData,menuItemData.data());
+        setUpdateItemId(id);
+        setUpdateItemName(menuItemData.data().item);
+        setUpdateItemPrice(Number(menuItemData.data().price));
+        setUpdateItemAvailability(Boolean(menuItemData.data().available));
+    }
+
+    const deleteMenuItem = async(id)=>{
+        await deleteDoc(doc(foodMenuCollectionRef, id));
+        getMenu();
     }
 
     useEffect(()=>{
@@ -103,7 +113,13 @@ const DbInterface = () => {
                     return (
                         <div className="m-4 itm" key={food.itemId}>
                             <h4 className={food.available?'text-success':'text-warning'}>{food.item}....${food.price}</h4>
-                            <button className='btn btn-danger'>Delete</button>
+                            <button className='btn btn-sm btn-danger w-25 h-25' onClick={()=>{
+                                deleteMenuItem(food.itemId);
+                            }}>Delete</button>
+                            <button className='btn btn-sm btn-primary w-25 h-25' onClick={()=>{
+                                setShowUpdateForm(true);
+                                prepareUpdateForm(food.itemId);
+                            }}>Edit</button>
                         </div>
                     )
                 })
@@ -139,32 +155,40 @@ const DbInterface = () => {
                 
             </form>
 
-            <h1>Update Menu Item</h1>
+            {
+                showUpdateForm &&
+                <>
+                    <h1>Update Menu Item</h1>
 
-            <form onSubmit={updateMenuItem}>
-                <label htmlFor='item name'>Food Item Name</label>
-                <input type="text" placeholder='item name ....' onChange={(e)=>{setUpdateItemName(e.target.value)}}/>
-                <br /><br />
-                <label htmlFor='item price'>Food Item Price</label>
-                <input type="number" placeholder='price...' onChange={(e)=>{setUpdateItemPrice(Number(e.target.value))}}/>
-                <br /><br />
-                <label htmlFor="availability">Available??</label>
-                <select name="avail" onChange={(e)=>{
-                    setUpdateItemAvailability(e.target.value==="true")}}>
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-                <input type="submit" value="Update" />
-                <br />
-                {
-                    showUpdateEmptyError && 
-                    <p className='text-danger'>Please fill the item name !!</p>
-                }
-                {
-                    showUpdateExistError &&
-                    <p className='text-danger'>This item doesn't exists in the menu!!</p>
-                }
-            </form>
+                    <form>
+                        <label htmlFor='item name'>Food Item Name</label>
+                        <input type="text" placeholder='item name ....' value={updateItemName} onChange={(e)=>{setUpdateItemName(e.target.value)}}/>
+                        <br /><br />
+                        <label htmlFor='item price'>Food Item Price</label>
+                        <input type="number" placeholder='price...' value={updateItemPrice} onChange={(e)=>{setUpdateItemPrice(Number(e.target.value))}}/>
+                        <br /><br />
+                        <label htmlFor="availability">Available??</label>
+                        <select name="avail" value={updateItemAvailability} onChange={(e)=>{
+                            setUpdateItemAvailability(e.target.value==="true")}}>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        </select>
+                        {/* <input type="submit" value="Update" /> */}
+                        <br />
+                        {
+                            showUpdateEmptyError && 
+                            <p className='text-danger'>Please fill the item name !!</p>
+                        }
+                        {
+                            showUpdateExistError &&
+                            <p className='text-danger'>This item doesn't exists in the menu!!</p>
+                        }
+                    </form>
+
+                    <button onClick={()=>{updateMenuItem(updateItemId)}}>Update</button>
+                </>
+            }
+
         </div>
     </div>
     </>
