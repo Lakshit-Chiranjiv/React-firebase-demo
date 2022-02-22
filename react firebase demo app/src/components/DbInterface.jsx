@@ -21,7 +21,6 @@ const DbInterface = () => {
     const [showAddEmptyError,setShowAddEmptyError] = useState(false);
     const [showAddExistError,setShowAddExistError] = useState(false);
     const [showUpdateEmptyError,setShowUpdateEmptyError] = useState(false);
-    const [showUpdateExistError,setShowUpdateExistError] = useState(false);
 
     const foodMenuCollectionRef = collection(db,"food_menu");
 
@@ -178,10 +177,6 @@ const DbInterface = () => {
                         {
                             showUpdateEmptyError && 
                             <p className='text-danger'>Please fill the item name !!</p>
-                        }
-                        {
-                            showUpdateExistError &&
-                            <p className='text-danger'>This item doesn't exists in the menu!!</p>
                         }
                     </form>
 
