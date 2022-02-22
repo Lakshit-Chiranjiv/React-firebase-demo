@@ -36,10 +36,6 @@ input{
   /* width: 40%; */
 }
 
-/* .itm button{
-  height: 30px;
-  width: 90px;
-  margin-top: auto;
-  margin-bottom: auto;
-  cursor: pointer;
-} */
+.itm h4{
+  text-transform: capitalize;
+}
