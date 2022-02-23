@@ -110,15 +110,20 @@ const DbInterface = () => {
             {
                 foodItems.map((food)=>{
                     return (
-                        <div className="m-4 itm" key={food.itemId}>
-                            <h4 className={food.available?'text-success':'text-warning'}>{food.item}....${food.price}</h4>
-                            <button className='btn btn-sm btn-danger w-25 h-25' onClick={()=>{
-                                deleteMenuItem(food.itemId);
-                            }}>Delete</button>
-                            <button className='btn btn-sm btn-primary w-25 h-25' onClick={()=>{
-                                setShowUpdateForm(true);
-                                prepareUpdateForm(food.itemId);
-                            }}>Edit</button>
+                        <div className="border-bottom border-2 p-3 m-4 itm" key={food.itemId}>
+                            <div className="d-flex menu-item-data">
+                                <h4 className={food.available?'text-success':'text-warning'}>{food.item}</h4>
+                                <h5 className="mt-auto mb-auto text-primary prc">${food.price}</h5>
+                            </div>
+                            <div className="d-flex menu-item-btns">
+                                <button className='btn btn-sm btn-danger me-4 w-25' onClick={()=>{
+                                    deleteMenuItem(food.itemId);
+                                }}>Delete</button>
+                                <button className='btn btn-sm btn-dark me-4 w-25' onClick={()=>{
+                                    setShowUpdateForm(true);
+                                    prepareUpdateForm(food.itemId);
+                                }}>Edit</button>
+                            </div>
                         </div>
                     )
                 })
@@ -128,20 +133,22 @@ const DbInterface = () => {
             <h1>Add Food Item</h1>
 
             <form onSubmit={submitMenuItem}>
-                <label htmlFor='item name'>Food Item Name</label>
-                <input type="text" placeholder='item name ....' onChange={(e)=>{setItemName(e.target.value)}}/>
+                <label htmlFor='item name' className='form-label'>Food Item Name</label>
+                <input type="text" className='form-control w-75' placeholder='item name ....' onChange={(e)=>{setItemName(e.target.value)}}/>
                 <br /><br />
-                <label htmlFor='item price'>Food Item Price</label>
-                <input type="number" placeholder='price...' onChange={(e)=>{setItemPrice(Number(e.target.value))}}/>
+                <label htmlFor='item price' className='form-label'>Food Item Price</label>
+                <input type="number" className='form-control w-75' placeholder='price...' onChange={(e)=>{setItemPrice(Number(e.target.value))}}/>
                 <br /><br />
                 <label htmlFor="availability">Available??</label>
-                <select name="avail" onChange={(e)=>{
+                <select name="avail" className='form-select w-75' onChange={(e)=>{
                     setItemAvailability(e.target.value==="true")}}>
                     <option value="true">True</option>
                     <option value="false">False</option>
                 </select>
 
-                <input type="submit" value="submit" />
+                <div className="d-grid">
+                    <input className='btn btn-success w-75 mt-5' type="submit" value="Submit" />
+                </div>
                 <br />
                 {
                     showAddEmptyError && 
@@ -160,14 +167,14 @@ const DbInterface = () => {
                     <h1>Update Menu Item</h1>
 
                     <form>
-                        <label htmlFor='item name'>Food Item Name</label>
-                        <input type="text" placeholder='item name ....' value={updateItemName} onChange={(e)=>{setUpdateItemName(e.target.value)}}/>
+                        <label htmlFor='item name' className='form-label'>Food Item Name</label>
+                        <input type="text" className='form-control w-75' placeholder='item name ....' value={updateItemName} onChange={(e)=>{setUpdateItemName(e.target.value)}}/>
                         <br /><br />
-                        <label htmlFor='item price'>Food Item Price</label>
-                        <input type="number" placeholder='price...' value={updateItemPrice} onChange={(e)=>{setUpdateItemPrice(Number(e.target.value))}}/>
+                        <label htmlFor='item price' className='form-label'>Food Item Price</label>
+                        <input type="number" className='form-control w-75' placeholder='price...' value={updateItemPrice} onChange={(e)=>{setUpdateItemPrice(Number(e.target.value))}}/>
                         <br /><br />
                         <label htmlFor="availability">Available??</label>
-                        <select name="avail" value={updateItemAvailability} onChange={(e)=>{
+                        <select name="avail" className='form-select w-75' value={updateItemAvailability} onChange={(e)=>{
                             setUpdateItemAvailability(e.target.value==="true")}}>
                             <option value="true">True</option>
                             <option value="false">False</option>
@@ -180,7 +187,9 @@ const DbInterface = () => {
                         }
                     </form>
 
-                    <button onClick={()=>{updateMenuItem(updateItemId)}}>Update</button>
+                    <div className="d-grid">
+                        <button className='btn btn-success w-75' onClick={()=>{updateMenuItem(updateItemId)}}>Update</button>
+                    </div>
                 </>
             }
 

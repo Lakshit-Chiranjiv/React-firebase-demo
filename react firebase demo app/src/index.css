@@ -9,16 +9,16 @@ body {
 
 .db{
   display: flex;
-  gap: 30px;
+  gap: 20px;
 }
 
 .menu{
-  width: 65%;
+  width: 55%;
   border-right: 1px solid black;
 }
 
 .add{
-  width: 35%;
+  width: 45%;
 }
 
 h1,h2{
@@ -26,16 +26,26 @@ h1,h2{
 }
 
 input{
-  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .itm{
   display: flex;
-  gap: 30px;
+  flex-direction: column;
+  gap: 10px;
   margin: 10px;
   /* width: 40%; */
 }
 
 .itm h4{
   text-transform: capitalize;
+}
+
+.menu-item-data{
+  position: relative;
+}
+
+.prc{
+  position: absolute;
+  right: 46%;
 }
