@@ -37,7 +37,6 @@ const AuthInterface = () => {
     const getAllUsers = async() => {
         const usersData = await getDocs(UsersCollectionRef);
         setUsersArray(usersData.docs.map((docItem)=> ({...docItem.data()})));
-        // console.log(usersArray);
     }
 
     
@@ -80,7 +79,6 @@ const AuthInterface = () => {
                     }
                 }
                 else{
-                    console.log("password length should be at least 6 characters");
                     setRegisterPasswordLengthError(true);
                     setTimeout(()=>{
                         setRegisterPasswordLengthError(false);
@@ -152,62 +150,66 @@ const AuthInterface = () => {
               <h2 className="text-center">{presentUsername}</h2>
           }
         <div>
-            <h2>Register</h2>
-            <label htmlFor="name">username</label>
-            <input type="text" onChange={(e)=>{setRegisterUsername(e.target.value)}}/>
+            <h2 className='ms-0'>Register</h2>
+            <label htmlFor="name" className='form-label'>Username</label>
+            <input type="text" className='form-control w-25' onChange={(e)=>{setRegisterUsername(e.target.value)}}/>
             <br />
-            <label htmlFor="name">email</label>
-            <input type="email" onChange={(e)=>{setRegisterEmail(e.target.value)}}/>
+            <label htmlFor="email" className='form-label'>Email</label>
+            <input type="email" className='form-control w-25' onChange={(e)=>{setRegisterEmail(e.target.value)}}/>
             <br />
-            <label htmlFor="password">password</label>
-            <input type="text" onChange={(e)=>{setRegisterPassword(e.target.value)}}/>
+            <label htmlFor="password" className='form-label'>Password</label>
+            <input type="text" className='form-control w-25' onChange={(e)=>{setRegisterPassword(e.target.value)}}/>
             <br />
-            <button onClick={registerUser}>Register</button>
+            <div className="d-grid">
+                <button className='btn btn-primary w-25 mb-3' onClick={registerUser}>Register</button>
+            </div>
 
             {
                 registerEmptyError && 
-                <p>Fill up all the fields!!</p>
+                <small className='text-danger'>Fill up all the fields!!</small>
             }
             {
                 registerExistError && 
-                <p>Email already exists, try to Login !!</p>
+                <small className='text-danger'>Email already exists, try to Login !!</small>
             }
             {
                 registerUsernameExistError && 
-                <p>Username already exists, try some other username !!</p>
+                <small className='text-danger'>Username already exists, try some other username !!</small>
             }
             {
                 registerPasswordLengthError && 
-                <p>Password should be at least 6 characters long</p>
+                <small className='text-danger'>Password should be at least 6 characters long</small>
             }
         </div>
         <div>
-            <h2>Login</h2>
-            <label htmlFor="name">username</label>
-            <input type="text" onChange={(e)=>{setLoginUsername(e.target.value)}}/>
+            <h2 className='ms-0'>Login</h2>
+            <label htmlFor="name" className='form-label'>Username</label>
+            <input type="text" className='form-control w-25' onChange={(e)=>{setLoginUsername(e.target.value)}}/>
             <br />
-            <label htmlFor="name">email</label>
-            <input type="email" onChange={(e)=>{setLoginEmail(e.target.value)}}/>
+            <label htmlFor="email" className='form-label'>Email</label>
+            <input type="email" className='form-control w-25' onChange={(e)=>{setLoginEmail(e.target.value)}}/>
             <br />
-            <label htmlFor="password">password</label>
-            <input type="text" onChange={(e)=>{setLoginPassword(e.target.value)}}/>
+            <label htmlFor="password" className='form-label'>Password</label>
+            <input type="text" className='form-control w-25' onChange={(e)=>{setLoginPassword(e.target.value)}}/>
             <br />
-            <button onClick={loginUser}>Login</button>
+            <div className="d-grid">
+                <button className='btn btn-primary w-25 mb-3' onClick={loginUser}>Login</button>
+            </div>
             {
                 loginEmptyError && 
-                <p>Fill up all the fields!!</p>
+                <small className='text-danger'>Fill up all the fields!!</small>
             }
             {
                 loginExistError && 
-                <p>User email doesn't exist, try to Register!!</p>
+                <small className='text-danger'>User email doesn't exist, try to Register!!</small>
             }
             {
                 loginUsernameExistError && 
-                <p>Username is incorrect!!</p>
+                <small className='text-danger'>Username is incorrect!!</small>
             }
             {
                 loginWrongPasswordError && 
-                <p>Wrong Password !!</p>
+                <small className='text-danger'>Wrong Password !!</small>
             }
         </div>
 
@@ -215,7 +217,10 @@ const AuthInterface = () => {
             presentUser &&
             <p>{presentUser.email}</p>
         }
-        <button onClick={logoutUser}>Logout</button>
+        
+        <div className="d-grid">
+            <button className='btn btn-danger w-25' onClick={logoutUser}>Logout</button>
+        </div>
       </div>
   )
 }

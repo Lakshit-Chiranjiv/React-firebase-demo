@@ -1,9 +1,13 @@
 import React, { useState,useEffect } from 'react';
-import { db } from './../firebase-config';
+import { db,auth } from './../firebase-config';
 import { collection,getDocs,getDoc,addDoc,setDoc,doc,updateDoc,deleteDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router';
 
 
 const DbInterface = () => {
+
+    let navigate = useNavigate();
 
     const [foodItems,setFoodItems] = useState([]);
     
@@ -95,6 +99,12 @@ const DbInterface = () => {
     const deleteMenuItem = async(id)=>{
         await deleteDoc(doc(foodMenuCollectionRef, id));
         getMenu();
+    }
+
+    const logoutUser = async()=>{
+        await signOut(auth);
+        navigate("/");
+        // setShowUsername(false);
     }
 
     useEffect(()=>{
@@ -194,6 +204,9 @@ const DbInterface = () => {
             }
 
         </div>
+    </div>
+    <div className="d-grid">
+        <button className='btn btn-danger w-25' onClick={logoutUser}>Logout</button>
     </div>
     </>
   )
