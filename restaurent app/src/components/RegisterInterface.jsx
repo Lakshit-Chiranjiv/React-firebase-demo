@@ -5,7 +5,7 @@ import { db } from './../firebase-config';
 import { collection,getDocs,addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router';
 
-const RegisterInterface = () => {
+const RegisterInterface = ({setPresentUsername}) => {
 
     let navigate = useNavigate();
 
@@ -20,10 +20,6 @@ const RegisterInterface = () => {
     const [registerUsernameExistError,setRegisterUsernameExistError] = useState(false);
     const [registerPasswordLengthError,setRegisterPasswordLengthError] = useState(false);
 
-    // const [presentUser,setPresentUser] = useState({});
-    // const [showUsername,setShowUsername] = useState(false);
-    // const [presentUsername,setPresentUsername] = useState("");
-
     const UsersCollectionRef = collection(db,"Restaurent_users");
 
     const getAllUsers = async() => {
@@ -36,9 +32,6 @@ const RegisterInterface = () => {
         getAllUsers();
     },[]);
 
-    // onAuthStateChanged(auth,(currentUser)=>{
-    //     setPresentUser(currentUser);
-    // });
 
     const registerUser = async()=>{
         console.log(usersArray,"mmmmm",usersArray.map((user)=>user.email));
@@ -49,12 +42,9 @@ const RegisterInterface = () => {
 
                         if(!usersArray.map((user)=>user.username).includes(registerUsername)){
                             const newUser = await createUserWithEmailAndPassword(auth,registerEmail,registerPassword);
-                            // console.log(newUser,newUser.user);
                             await addDoc(UsersCollectionRef,{ email: registerEmail,username: registerUsername });
-                            // getAllUsers();
+                            setPresentUsername(registerUsername);
                             navigate("/db");
-                            // setPresentUsername(registerUsername);
-                            // setShowUsername(true);
                         }
                         else{
                             setRegisterUsernameExistError(true);
@@ -93,19 +83,19 @@ const RegisterInterface = () => {
 
 
     return (
-          <div>
-              <h2 className='ms-0'>Register</h2>
+          <div className='container mb-4'>
+              <h2 className='ms-0 text-center display-3'>Register</h2>
               <label htmlFor="name" className='form-label'>Username</label>
-              <input type="text" className='form-control w-25' onChange={(e)=>{setRegisterUsername(e.target.value)}}/>
+              <input type="text" className='form-control' onChange={(e)=>{setRegisterUsername(e.target.value)}}/>
               <br />
               <label htmlFor="email" className='form-label'>Email</label>
-              <input type="email" className='form-control w-25' onChange={(e)=>{setRegisterEmail(e.target.value)}}/>
+              <input type="email" className='form-control' onChange={(e)=>{setRegisterEmail(e.target.value)}}/>
               <br />
               <label htmlFor="password" className='form-label'>Password</label>
-              <input type="text" className='form-control w-25' onChange={(e)=>{setRegisterPassword(e.target.value)}}/>
+              <input type="text" className='form-control' onChange={(e)=>{setRegisterPassword(e.target.value)}}/>
               <br />
               <div className="d-grid">
-                  <button className='btn btn-primary w-25 mb-3' onClick={registerUser}>Register</button>
+                  <button className='btn btn-primary mb-3' onClick={registerUser}>Register</button>
               </div>
   
               {

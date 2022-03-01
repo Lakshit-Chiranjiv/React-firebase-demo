@@ -6,6 +6,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+img{
+  width: auto;
+  height: auto;
+  max-width: 300px;
+  max-height: 300px;
+  margin-left: 170px;
+}
 
 .db{
   display: flex;
